@@ -177,7 +177,11 @@ class DevScanner(DefaultDelegate):
 
 
 def trigger_device(device):
-    [mac, dev_type, act] = device
+    [mac, dev_type, act, password] = device
+    use_password = False
+    if len(password) > 0:
+        use_password = True
+    print(binascii.crc32(password))
     # print 'Start to control'
     con = pexpect.spawn('gatttool -b ' + mac + ' -t random -I')
     con.expect('\[LE\]>')
@@ -199,7 +203,10 @@ def trigger_device(device):
     cmd_handle = con.before.split('\n')[-1].split()[2].strip(',')
     if dev_type == 'Bot':
         if act == 'Turn On':
-            con.sendline('char-write-cmd ' + cmd_handle + ' 570101')
+            if use_password:
+                con.sendline('char-write-cmd ' + cmd_handle + ' 570101')
+            else:
+                con.sendline('char-write-cmd ' + cmd_handle + ' 570101')
         elif act == 'Turn Off':
             con.sendline('char-write-cmd ' + cmd_handle + ' 570102')
         elif act == 'Press':
@@ -258,7 +265,9 @@ def main():
         dev = sys.argv[1]
         dev_type = sys.argv[2]
         act = sys.argv[3] if len(sys.argv) < 5 else ('Turn ' + sys.argv[4])
-        trigger_device([dev, dev_type, act])
+        print('Enter password (leave empty if no password is set):')
+        password = input()
+        trigger_device([dev, dev_type, act,password])
 
     elif len(sys.argv) == 1:
         # Start scanning...
@@ -281,7 +290,9 @@ def main():
 
             # Trigger the device to work
             # If the SwitchBot address is known you can run this command directly without scanning
-
+            print('Enter password (leave empty if no password is set):')
+            password = input()
+            ble_dev.append(password)
             trigger_device(ble_dev)
     else:
         print('Wrong cmd!')
