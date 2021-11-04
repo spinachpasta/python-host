@@ -181,7 +181,8 @@ def trigger_device(device):
     use_password = False
     if len(password) > 0:
         use_password = True
-    print(binascii.crc32(password))
+    print(password)
+    print(binascii.crc32(password.encode('utf8')))
     # print 'Start to control'
     con = pexpect.spawn('gatttool -b ' + mac + ' -t random -I')
     con.expect('\[LE\]>')
@@ -292,7 +293,7 @@ def main():
             # Trigger the device to work
             # If the SwitchBot address is known you can run this command directly without scanning
             print('Enter password (leave empty if no password is set):')
-            password=""
+            password = ""
             password = input()
             ble_dev.append(password)
             trigger_device(ble_dev)
