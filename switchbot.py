@@ -182,7 +182,8 @@ def trigger_device(device):
     use_password = False
     if len(password) > 0:
         use_password = True
-    print(binascii.hexlify(struct.pack(">i",binascii.crc32(password.encode('utf8')))))
+    crc32password=binascii.hexlify(struct.pack(">i",binascii.crc32(password.encode('utf8'))))
+    print(crc32password)
     # print 'Start to control'
     con = pexpect.spawn('gatttool -b ' + mac + ' -t random -I')
     con.expect('\[LE\]>')
@@ -205,13 +206,19 @@ def trigger_device(device):
     if dev_type == 'Bot':
         if act == 'Turn On':
             if use_password:
-                con.sendline('char-write-cmd ' + cmd_handle + ' 570101')
+                con.sendline('char-write-cmd ' + cmd_handle + ' 570111' + crc32password + '01')
             else:
                 con.sendline('char-write-cmd ' + cmd_handle + ' 570101')
         elif act == 'Turn Off':
-            con.sendline('char-write-cmd ' + cmd_handle + ' 570102')
+            if use_password:
+                con.sendline('char-write-cmd ' + cmd_handle + ' 570111' + crc32password + '02')
+            else:
+                con.sendline('char-write-cmd ' + cmd_handle + ' 570101')
         elif act == 'Press':
-            con.sendline('char-write-cmd ' + cmd_handle + ' 570100')
+            if use_password:
+                con.sendline('char-write-cmd ' + cmd_handle + ' 570111' + crc32password)
+            else:
+                con.sendline('char-write-cmd ' + cmd_handle + ' 570101')
         elif act == 'Down':
             con.sendline('char-write-cmd ' + cmd_handle + ' 570103')
         elif act == 'Up':
