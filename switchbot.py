@@ -182,7 +182,7 @@ def trigger_device(device):
     use_password = False
     if len(password) > 0:
         use_password = True
-    print(struct.pack(">i",binascii.crc32(password.encode('utf8'))))
+    print(binascii.hexlify(struct.pack(">i",binascii.crc32(password.encode('utf8')))))
     # print 'Start to control'
     con = pexpect.spawn('gatttool -b ' + mac + ' -t random -I')
     con.expect('\[LE\]>')
