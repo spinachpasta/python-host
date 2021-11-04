@@ -177,6 +177,7 @@ class DevScanner(DefaultDelegate):
 
 
 def trigger_device(device):
+    print(device)
     [mac, dev_type, act, password] = device
     use_password = False
     if len(password) > 0:
@@ -296,6 +297,7 @@ def main():
             password = ""
             password = input()
             ble_dev.append(password)
+            print(ble_dev)
             trigger_device(ble_dev)
     else:
         print('Wrong cmd!')
