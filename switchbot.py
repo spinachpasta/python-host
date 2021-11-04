@@ -18,6 +18,7 @@ from bluepy.btle import Scanner, DefaultDelegate
 import binascii
 import copy
 import datetime
+import struct
 
 
 class ScanDelegate(DefaultDelegate):
