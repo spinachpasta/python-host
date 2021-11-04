@@ -296,6 +296,7 @@ def main():
             print('Enter password (leave empty if no password is set):')
             password = ""
             password = input()
+            print(password)
             ble_dev.append(password)
             print(ble_dev)
             trigger_device(ble_dev)
