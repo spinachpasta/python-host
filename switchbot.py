@@ -266,6 +266,7 @@ def main():
         dev_type = sys.argv[2]
         act = sys.argv[3] if len(sys.argv) < 5 else ('Turn ' + sys.argv[4])
         print('Enter password (leave empty if no password is set):')
+        password=""
         password = input()
         trigger_device([dev, dev_type, act,password])
 
@@ -291,6 +292,7 @@ def main():
             # Trigger the device to work
             # If the SwitchBot address is known you can run this command directly without scanning
             print('Enter password (leave empty if no password is set):')
+            password=""
             password = input()
             ble_dev.append(password)
             trigger_device(ble_dev)
