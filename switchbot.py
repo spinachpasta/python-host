@@ -177,13 +177,11 @@ class DevScanner(DefaultDelegate):
 
 
 def trigger_device(device):
-    print(device)
     [mac, dev_type, act, password] = device
     use_password = False
     if len(password) > 0:
         use_password = True
-    print(password)
-    print(binascii.crc32(password.encode('utf8')))
+    print(binascii.crc32(password.encode('utf8')).to_bytes(4,"big"))
     # print 'Start to control'
     con = pexpect.spawn('gatttool -b ' + mac + ' -t random -I')
     con.expect('\[LE\]>')
@@ -296,9 +294,7 @@ def main():
             print('Enter password (leave empty if no password is set):')
             password = ""
             password = raw_input()#use input() for python3
-            print(password)
             ble_dev.append(password)
-            print(ble_dev)
             trigger_device(ble_dev)
     else:
         print('Wrong cmd!')
